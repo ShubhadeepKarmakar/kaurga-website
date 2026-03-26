@@ -1,6 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     /* =========================================
+       0. ACTIVE NAV LINK HIGHLIGHTING
+       ========================================= */
+    const rawPage = window.location.pathname.split('/').pop();
+    const currentPage = rawPage === '' ? 'index.html' : rawPage;
+    document.querySelectorAll('.nav-menu li a, .mobile-menu a').forEach(link => {
+        const linkPage = link.getAttribute('href');
+        if (linkPage === currentPage || (currentPage === '' && linkPage === 'index.html')) {
+            link.classList.add('active');
+        }
+    });
+
+    /* =========================================
        1. HERO SLIDER LOGIC
        ========================================= */
     const slides = document.querySelectorAll('.slide');
@@ -111,5 +123,69 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    /* =========================================
+       4. SCROLL REVEAL ANIMATIONS
+       ========================================= */
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+        revealObserver.observe(el);
+    });
+
+    /* =========================================
+       5. BACK TO TOP BUTTON
+       ========================================= */
+    const backToTopBtn = document.getElementById('back-to-top');
+    if (backToTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        });
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    /* =========================================
+       6. ANIMATED COUNTERS
+       ========================================= */
+    const counters = document.querySelectorAll('.stat-number[data-target]');
+    if (counters.length > 0) {
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = parseInt(el.getAttribute('data-target'), 10);
+                    const suffix = el.getAttribute('data-suffix') || '';
+                    const duration = 1800;
+                    const startTime = performance.now();
+
+                    function step(now) {
+                        const elapsed = now - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        el.textContent = Math.floor(progress * target) + suffix;
+                        if (progress < 1) {
+                            requestAnimationFrame(step);
+                        }
+                    }
+                    requestAnimationFrame(step);
+                    counterObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        counters.forEach(counter => counterObserver.observe(counter));
+    }
 
 });

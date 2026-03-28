@@ -70,10 +70,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        const shouldShowPopup = true;
+        // Only auto-show popup on home page and only if not shown during this session
+        const popupAutoShownThisSession = sessionStorage.getItem('popupAutoShownThisSession');
+        const shouldShowPopup = isHomePage && !popupAutoShownThisSession;
 
         if (shouldShowPopup) {
             window.setTimeout(showStartupPopup, 300);
+            // Mark that we've shown the popup during this session
+            sessionStorage.setItem('popupAutoShownThisSession', 'true');
         }
 
         startupPopupClose.addEventListener('click', hideStartupPopup);
@@ -89,6 +93,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 hideStartupPopup();
             }
         });
+
+        // Show popup when logo is clicked
+        const logoLink = document.querySelector('.logo-link');
+        if (logoLink) {
+            logoLink.addEventListener('click', (event) => {
+                // Only show popup if we're staying on the page (not navigating away)
+                if (isHomePage) {
+                    event.preventDefault();
+                    if (!popupIsActive) {
+                        showStartupPopup();
+                    }
+                }
+                // If not on home page, allow normal navigation
+            });
+        }
     }
 
     /* =========================================
@@ -283,5 +302,124 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    /* =========================================
+       6. CONTACT FORM EMAIL + PHONE VALIDATION
+       ========================================= */
+    const contactForm = document.getElementById('contactForm');
+
+    if (contactForm) {
+        const phoneInput = contactForm.querySelector('input[name="phone"]');
+        const emailRecipient = contactForm.dataset.recipientEmail || 'kaurga@gmail.com';
+
+        function digitsOnly(value) {
+            return value.replace(/\D/g, '');
+        }
+
+        if (phoneInput) {
+            phoneInput.addEventListener('input', () => {
+                phoneInput.value = digitsOnly(phoneInput.value).slice(0, 10);
+                if (phoneInput.value.length === 10) {
+                    phoneInput.setCustomValidity('');
+                }
+            });
+
+            phoneInput.addEventListener('invalid', () => {
+                phoneInput.setCustomValidity('Please enter exactly 10 digits for phone number.');
+            });
+
+            phoneInput.addEventListener('blur', () => {
+                phoneInput.setCustomValidity('');
+                if (digitsOnly(phoneInput.value).length !== 10) {
+                    phoneInput.setCustomValidity('Please enter exactly 10 digits for phone number.');
+                }
+            });
+        }
+
+        contactForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const name = (contactForm.querySelector('input[name="name"]')?.value || '').trim();
+            const email = (contactForm.querySelector('input[name="email"]')?.value || '').trim();
+            const phone = digitsOnly(contactForm.querySelector('input[name="phone"]')?.value || '');
+            const message = (contactForm.querySelector('textarea[name="message"]')?.value || '').trim();
+
+            if (phone.length !== 10) {
+                if (phoneInput) {
+                    phoneInput.setCustomValidity('Please enter exactly 10 digits for phone number.');
+                    phoneInput.reportValidity();
+                }
+                return;
+            }
+
+            if (phoneInput) {
+                phoneInput.setCustomValidity('');
+            }
+
+            const subject = encodeURIComponent(`Contact Form Query from ${name || 'Website Visitor'}`);
+            const body = encodeURIComponent(
+                `Name: ${name}\n` +
+                `Email: ${email}\n` +
+                `Phone: ${phone}\n\n` +
+                `Message:\n${message}`
+            );
+
+            window.location.href = `mailto:${emailRecipient}?subject=${subject}&body=${body}`;
+        });
+    }
+
+    /* =========================================
+       7. TOPPER MODAL FUNCTIONALITY
+       ========================================= */
+    const seeAllButtons = document.querySelectorAll('.see-all-btn');
+    
+    seeAllButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            const modalId = button.getAttribute('data-modal');
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
+                // Prevent body scroll when modal is open
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    });
+
+    // Close modal when close button is clicked
+    const closeButtons = document.querySelectorAll('.modal-close');
+    closeButtons.forEach((closeBtn) => {
+        closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const modal = closeBtn.closest('.topper-modal-overlay');
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+    });
+
+    // Close modal when clicking on overlay (outside content)
+    const modals = document.querySelectorAll('.topper-modal-overlay');
+    modals.forEach((modal) => {
+        modal.addEventListener('click', (e) => {
+            // Only close if clicking directly on overlay, not on content
+            if (e.target === modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+    });
+
+    // Close modal on ESC key press
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            modals.forEach((modal) => {
+                if (modal.classList.contains('active')) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
+    });
 
 });

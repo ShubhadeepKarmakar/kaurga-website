@@ -1814,68 +1814,111 @@ a { text-decoration: none; color: inherit; }
 /* 3. Base Card Style */
 .service-box {
     background: white;
-    padding: 20px 8px;
-    border-radius: 8px;
+    padding: 28px 16px;
+    border-radius: 12px;
     text-align: center;
     color: white;
-    transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
-    
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
     position: relative;
     overflow: hidden;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid transparent;
+}
+
+.service-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
 }
 
 /* Hover Effect */
 .service-box:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+}
+
+.service-box:hover::before {
+    opacity: 0.1;
 }
 
 /* 4. THEME COLORS (Navy & Maroon) */
 .theme-navy {
-    background: linear-gradient(135deg, #0f1c3f, #1a2b5e);
-    border-bottom: 4px solid #f4a226;
+    background: linear-gradient(135deg, #0f1c3f 0%, #1a2b5e 50%, #264a8a 100%);
+    border-bottom: 5px solid #f4a226;
+}
+
+.theme-navy:hover {
+    background: linear-gradient(135deg, #1a2b5e 0%, #264a8a 50%, #1a3a7a 100%);
 }
 
 .theme-red {
-    background: linear-gradient(135deg, #900d0d, #b71540);
-    border-bottom: 4px solid #f4a226;
+    background: linear-gradient(135deg, #900d0d 0%, #b71540 50%, #d90f3a 100%);
+    border-bottom: 5px solid #f4a226;
+}
+
+.theme-red:hover {
+    background: linear-gradient(135deg, #b71540 0%, #d90f3a 50%, #c71535 100%);
 }
 
 /* 5. Inner Elements */
 .icon-circle {
-    width: 45px;
-    height: 45px;
-    background: rgba(255,255,255,0.15);
+    width: 56px;
+    height: 56px;
+    background: rgba(255,255,255,0.2);
     border-radius: 50%;
-    margin: 0 auto 12px;
+    margin: 0 auto 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
-    border: 1px solid rgba(255,255,255,0.2);
+    font-size: 1.6rem;
+    border: 2px solid rgba(255,255,255,0.3);
+    transition: all 0.35s ease;
+    color: white;
+}
+
+.service-box:hover .icon-circle {
+    background: rgba(255,255,255,0.3);
+    border-color: rgba(255,255,255,0.5);
+    transform: scale(1.1) rotate(10deg);
 }
 
 .service-box h3 { 
-    font-size: 0.9rem;
-    margin-bottom: 4px;
-    color: white;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    color: #ffffff;
     font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    line-height: 1.3;
 }
 
 .service-box p { 
-    font-size: 0.75rem;
-    opacity: 0.95;
-    line-height: 1.3;
+    font-size: 0.85rem;
+    opacity: 0.98;
+    line-height: 1.4;
     margin: 0;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 500;
 }
 
 .dash { 
-    width: 16px;
-    height: 2px;
-    background: rgba(255,255,255,0.4);
-    margin: 8px auto 0;
+    width: 32px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #f4a226, transparent);
+    margin: 12px auto 0;
+    opacity: 0.8;
 }
 
 /* 6. MOBILE RESPONSIVE (Horizontal Scroll) */
@@ -2568,6 +2611,188 @@ body.contact-page > .main-footer {
     font-size: 1.55rem;
     letter-spacing: 0.2px;
     padding-bottom: 10px;
+}
+
+/* =========================================
+   RKM ENTRANCE PAGE STYLES
+   ========================================= */
+
+.rkm-page {
+    background: var(--white);
+}
+
+.rkm-entrance-section {
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+    min-height: calc(100vh - 300px);
+}
+
+.rkm-content-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: start;
+}
+
+.rkm-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.rkm-main-image {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rkm-main-image:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+}
+
+.rkm-text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 20px;
+}
+
+.rkm-text-content {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border-left: 5px solid var(--primary);
+}
+
+.rkm-text-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.rkm-text-content p:last-of-type {
+    margin-bottom: 0;
+}
+
+.rkm-features {
+    margin: 25px 0;
+    padding: 20px;
+    background: #f0f7ff;
+    border-radius: 8px;
+}
+
+.rkm-features p {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: #1a4d7a;
+}
+
+.rkm-features p:last-child {
+    margin-bottom: 0;
+}
+
+.rkm-highlight {
+    background: #fff3cd;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--highlight);
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #8b6914;
+    margin: 20px 0 !important;
+}
+
+.rkm-admission {
+    background: #ffe6e6;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #7f0606;
+    margin: 20px 0 !important;
+}
+
+.rkm-call-button-container {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-call-now {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 40px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    box-shadow: 0 8px 25px rgba(127, 6, 6, 0.3);
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-call-now:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(127, 6, 6, 0.4);
+    background: linear-gradient(135deg, #5a0404 0%, #a01f1f 100%);
+}
+
+.btn-call-now:active {
+    transform: translateY(-1px);
+}
+
+/* Responsive Design for RKM Entrance */
+@media (max-width: 768px) {
+    .rkm-entrance-section {
+        padding: 40px 15px;
+    }
+
+    .rkm-content-wrapper {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .rkm-image-container {
+        padding: 0;
+    }
+
+    .rkm-text-container {
+        padding: 0;
+    }
+
+    .rkm-text-content {
+        padding: 25px 20px;
+    }
+
+    .rkm-text-content p {
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+
+    .rkm-main-image {
+        max-width: 100%;
+    }
+
+    .btn-call-now {
+        padding: 15px 30px;
+        font-size: 1rem;
+        width: 100%;
+    }
 }
 
 .form-title::after {
